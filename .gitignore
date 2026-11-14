@@ -1,0 +1,15 @@
+# Dados brutos: 20 MB de CSV que scripts/00_baixar.R baixa de novo em segundos.
+# O que VAI para o repositorio e o .rds tratado (3,3 MB), porque o shinyapps.io
+# publica so a pasta do app e o app precisa dos dados dentro dela.
+dados/brutos/
+
+# Saidas geradas
+saidas/
+rsconnect/
+
+# R
+.Rhistory
+.RData
+.Rproj.user/
+*.Rproj
+.DS_Store
