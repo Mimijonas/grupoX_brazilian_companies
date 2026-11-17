@@ -139,8 +139,16 @@ aba02Server <- function(id, dados) {
 
       log_escala <- identical(input$escala, "log")
       x <- if (log_escala) d$log10_capital else d$capital_stock
-      med <- median(x)
-      mea <- mean(x)
+
+      # As duas medidas saem SEMPRE do capital em reais, e so depois vao
+      # para a posicao do eixo. Calcular a media sobre os logaritmos daria
+      # a media GEOMETRICA - R$ 619 mil em vez de R$ 9,1 mi -, e a linha
+      # contradiria a caixa de resumo logo acima, com o mesmo rotulo.
+      # A mediana nao muda (transformacao monotona), a media muda muito.
+      med_reais <- median(d$capital_stock)
+      mea_reais <- mean(d$capital_stock)
+      med <- if (log_escala) log10(med_reais) else med_reais
+      mea <- if (log_escala) log10(mea_reais) else mea_reais
 
       rotulo_x <- if (log_escala) "Capital social (escala log10)" else "Capital social (R$)"
       sub <- if (log_escala) {
@@ -172,11 +180,11 @@ aba02Server <- function(id, dados) {
         ggplot2::geom_vline(xintercept = mea, colour = CORES$neutro,
                             linetype = "dashed", linewidth = 0.8) +
         ggplot2::annotate("label", x = med, y = Inf, vjust = 1.2,
-                          label = paste("mediana", reais_curto(if (log_escala) 10^med else med)),
+                          label = paste("mediana", reais_curto(med_reais)),
                           colour = CORES$destaque, fill = "white", size = 3.6,
                           label.size = 0) +
         ggplot2::annotate("label", x = mea, y = Inf, vjust = 2.8,
-                          label = paste("média", reais_curto(if (log_escala) 10^mea else mea)),
+                          label = paste("média", reais_curto(mea_reais)),
                           colour = CORES$neutro, fill = "white", size = 3.6,
                           label.size = 0) +
         ggplot2::labs(title = "Distribuição do capital social declarado",
