@@ -76,9 +76,9 @@ linha, dois PRs em arquivos diferentes não se encostam. Para somar uma aba:
 | 5 | Qualificação do responsável | Breno | **pronta** |
 | 6 | Cruzamento de duas categorias | Breno | **pronta** |
 | 7 | Cauda superior (top 1%) | Breno | **pronta** |
-| 8 | Concentração (Lorenz / Gini) | | |
-| 9 | Qualidade do dado | | |
-| 10 | Busca de empresas | | |
+| 8 | Concentração (Lorenz / Gini) | Breno | **pronta** |
+| 9 | Qualidade do dado | Breno | **pronta** |
+| 10 | Busca de empresas | Breno | **pronta** |
 
 A divisão acima é uma **proposta** — vale o que o grupo combinar. O que ela leva
 em conta é o que a base sustenta: são 6 colunas, com **uma única variável
