@@ -74,8 +74,8 @@ linha, dois PRs em arquivos diferentes não se encostam. Para somar uma aba:
 | 3 | Porte da empresa | Breno | **pronta** |
 | 4 | Natureza jurídica | Breno | **pronta** |
 | 5 | Qualificação do responsável | Breno | **pronta** |
-| 6 | Natureza jurídica × porte | | |
-| 7 | Cauda superior (top 1%) | | |
+| 6 | Cruzamento de duas categorias | Breno | **pronta** |
+| 7 | Cauda superior (top 1%) | Breno | **pronta** |
 | 8 | Concentração (Lorenz / Gini) | | |
 | 9 | Qualidade do dado | | |
 | 10 | Busca de empresas | | |

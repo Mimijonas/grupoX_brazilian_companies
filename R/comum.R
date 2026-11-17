@@ -63,6 +63,25 @@ numero_pt <- function(x, digitos = 0) {
   formatC(x, format = "f", digits = digitos, big.mark = ".", decimal.mark = ",")
 }
 
+# ---- Rotulos longos -----------------------------------------
+# "Individual Limited Liability Company (Business)" tem 47 caracteres e
+# nao cabe no eixo de um heatmap. Cortar no meio de uma palavra e feio,
+# entao corta-se na ultima palavra que couber.
+encurtar <- function(x, limite = 28) {
+  vapply(as.character(x), function(s) {
+    if (is.na(s) || nchar(s) <= limite) return(s)
+    palavras <- strsplit(s, " ", fixed = TRUE)[[1]]
+    acc <- character(0)
+    for (p in palavras) {
+      se_juntar <- paste(c(acc, p), collapse = " ")
+      if (nchar(se_juntar) > limite - 1) break
+      acc <- c(acc, p)
+    }
+    if (length(acc) == 0) return(paste0(substr(s, 1, limite - 1), "…"))
+    paste0(paste(acc, collapse = " "), "…")
+  }, character(1), USE.NAMES = FALSE)
+}
+
 # ---- Cores --------------------------------------------------
 # Uma paleta para o app todo, para as 10 abas nao sairem cada uma de uma cor.
 CORES <- list(

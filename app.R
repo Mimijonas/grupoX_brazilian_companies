@@ -28,7 +28,9 @@ ABAS <- list(
   list(ui = aba02UI, server = aba02Server, id = "aba02"),
   list(ui = aba03UI, server = aba03Server, id = "aba03"),
   list(ui = aba04UI, server = aba04Server, id = "aba04"),
-  list(ui = aba05UI, server = aba05Server, id = "aba05")
+  list(ui = aba05UI, server = aba05Server, id = "aba05"),
+  list(ui = aba06UI, server = aba06Server, id = "aba06"),
+  list(ui = aba07UI, server = aba07Server, id = "aba07")
 )
 
 rodape <- tags$div(
