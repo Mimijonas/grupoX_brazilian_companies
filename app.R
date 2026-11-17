@@ -22,11 +22,18 @@ for (arq in list.files("R", pattern = "\\.R$", full.names = TRUE)) source(arq)
 dados <- carrega_dados()
 
 # Uma linha por aba: numero, funcao de UI, funcao de servidor.
-# As abas 3 a 10 entram aqui conforme forem ficando prontas.
+# As dez abas do trabalho.
 ABAS <- list(
   list(ui = aba01UI, server = aba01Server, id = "aba01"),
   list(ui = aba02UI, server = aba02Server, id = "aba02"),
-  list(ui = aba03UI, server = aba03Server, id = "aba03")
+  list(ui = aba03UI, server = aba03Server, id = "aba03"),
+  list(ui = aba04UI, server = aba04Server, id = "aba04"),
+  list(ui = aba05UI, server = aba05Server, id = "aba05"),
+  list(ui = aba06UI, server = aba06Server, id = "aba06"),
+  list(ui = aba07UI, server = aba07Server, id = "aba07"),
+  list(ui = aba08UI, server = aba08Server, id = "aba08"),
+  list(ui = aba09UI, server = aba09Server, id = "aba09"),
+  list(ui = aba10UI, server = aba10Server, id = "aba10")
 )
 
 rodape <- tags$div(

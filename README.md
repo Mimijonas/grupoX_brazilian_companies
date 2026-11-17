@@ -72,13 +72,13 @@ linha, dois PRs em arquivos diferentes não se encostam. Para somar uma aba:
 | 1 | Panorama geral | Breno | **pronta** |
 | 2 | Distribuição do capital social | Breno | **pronta** |
 | 3 | Porte da empresa | Breno | **pronta** |
-| 4 | Natureza jurídica | | |
-| 5 | Qualificação do responsável | | |
-| 6 | Natureza jurídica × porte | | |
-| 7 | Cauda superior (top 1%) | | |
-| 8 | Concentração (Lorenz / Gini) | | |
-| 9 | Qualidade do dado | | |
-| 10 | Busca de empresas | | |
+| 4 | Natureza jurídica | Breno | **pronta** |
+| 5 | Qualificação do responsável | Breno | **pronta** |
+| 6 | Cruzamento de duas categorias | Breno | **pronta** |
+| 7 | Cauda superior (top 1%) | Breno | **pronta** |
+| 8 | Concentração (Lorenz / Gini) | Breno | **pronta** |
+| 9 | Qualidade do dado | Breno | **pronta** |
+| 10 | Busca de empresas | Breno | **pronta** |
 
 A divisão acima é uma **proposta** — vale o que o grupo combinar. O que ela leva
 em conta é o que a base sustenta: são 6 colunas, com **uma única variável
