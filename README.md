@@ -72,8 +72,8 @@ linha, dois PRs em arquivos diferentes não se encostam. Para somar uma aba:
 | 1 | Panorama geral | Breno | **pronta** |
 | 2 | Distribuição do capital social | Breno | **pronta** |
 | 3 | Porte da empresa | Breno | **pronta** |
-| 4 | Natureza jurídica | | |
-| 5 | Qualificação do responsável | | |
+| 4 | Natureza jurídica | Breno | **pronta** |
+| 5 | Qualificação do responsável | Breno | **pronta** |
 | 6 | Natureza jurídica × porte | | |
 | 7 | Cauda superior (top 1%) | | |
 | 8 | Concentração (Lorenz / Gini) | | |

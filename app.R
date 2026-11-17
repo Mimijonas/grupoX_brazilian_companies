@@ -26,7 +26,9 @@ dados <- carrega_dados()
 ABAS <- list(
   list(ui = aba01UI, server = aba01Server, id = "aba01"),
   list(ui = aba02UI, server = aba02Server, id = "aba02"),
-  list(ui = aba03UI, server = aba03Server, id = "aba03")
+  list(ui = aba03UI, server = aba03Server, id = "aba03"),
+  list(ui = aba04UI, server = aba04Server, id = "aba04"),
+  list(ui = aba05UI, server = aba05Server, id = "aba05")
 )
 
 rodape <- tags$div(
