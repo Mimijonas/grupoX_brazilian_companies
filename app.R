@@ -22,8 +22,9 @@ for (arq in list.files("R", pattern = "\\.R$", full.names = TRUE)) source(arq)
 dados <- carrega_dados()
 
 # Uma linha por aba: numero, funcao de UI, funcao de servidor.
-# As abas 1 e 3 a 10 entram aqui conforme o grupo for entregando.
+# As abas 3 a 10 entram aqui conforme forem ficando prontas.
 ABAS <- list(
+  list(ui = aba01UI, server = aba01Server, id = "aba01"),
   list(ui = aba02UI, server = aba02Server, id = "aba02")
 )
 
