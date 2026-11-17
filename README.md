@@ -71,7 +71,7 @@ linha, dois PRs em arquivos diferentes não se encostam. Para somar uma aba:
 |---|---|---|---|
 | 1 | Panorama geral | Breno | **pronta** |
 | 2 | Distribuição do capital social | Breno | **pronta** |
-| 3 | Porte da empresa | | |
+| 3 | Porte da empresa | Breno | **pronta** |
 | 4 | Natureza jurídica | | |
 | 5 | Qualificação do responsável | | |
 | 6 | Natureza jurídica × porte | | |
