@@ -53,6 +53,36 @@ ui <- do.call(navbarPage, c(
     header = tags$head(tags$style(HTML("
       .well { background: #F7F9FB; border: 1px solid #E3EAF0; }
       .navbar-brand { font-weight: 700; }
+
+      /* Barra de controles fixa enquanto o conteudo rola.
+         Duas pecas, e as duas sao necessarias:
+         1) a linha do sidebarLayout vira flex, para a COLUNA da esquerda
+            esticar ate a altura do conteudo. Com o float do Bootstrap a
+            coluna tem a altura do proprio conteudo, e ai nao sobra
+            caminho para o sticky percorrer - ele nao gruda em nada.
+         2) o .well gruda no topo dessa coluna ja esticada.
+         So a linha de dentro do painel da aba e tocada (.tab-pane > .row):
+         as fileiras de caixas de resumo tambem sao .row, e virar flex
+         mudaria a quebra delas. */
+      .tab-pane > .row { display: flex; flex-wrap: wrap; }
+      .tab-pane > .row > div:first-child .well {
+        position: sticky;
+        top: 12px;
+        max-height: calc(100vh - 24px);
+        overflow-y: auto;
+      }
+
+      /* No celular a barra fica ACIMA do conteudo, e uma coluna grudada
+         comeria a tela inteira. Abaixo de 768px o Bootstrap ja empilha
+         as colunas, entao aqui se desfaz o sticky junto. */
+      @media (max-width: 767px) {
+        .tab-pane > .row { display: block; }
+        .tab-pane > .row > div:first-child .well {
+          position: static;
+          max-height: none;
+          overflow-y: visible;
+        }
+      }
     ")))
   ),
   lapply(ABAS, function(a) a$ui(a$id, dados)),
