@@ -1,0 +1,614 @@
+---
+title: "Capital social declarado das empresas brasileiras: distribuição, concentração e qualidade do registro"
+subtitle: "CE302 --- Elementos de Programação para Estatística | UFPR, 2026.2"
+author:
+  - Ana Sofia
+  - Breno Dias
+  - Camila Ogawa
+  - Henrique Kotelok
+  - Maria Oliveira
+date: "`r format(Sys.Date(), '%d de %B de %Y')`"
+lang: pt-BR
+output:
+  bookdown::html_document2:
+    toc: true
+    toc_depth: 3
+    toc_float: true
+    number_sections: true
+    code_folding: hide
+    fig_caption: true
+    theme: flatly
+bibliography: referencias.bib
+link-citations: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo = TRUE, message = FALSE, warning = FALSE,
+  fig.align = "center", fig.width = 8, fig.height = 4.6, dpi = 110
+)
+
+library(ggplot2)
+
+# As funcoes de formatacao sao as MESMAS do aplicativo. Um relatorio que
+# arredondasse por conta propria poderia contradizer o app na terceira
+# casa, e os dois seriam defensaveis isoladamente.
+source(file.path("..", "R", "comum.R"))
+
+empresas <- readRDS(file.path("..", "dados", "tratados", "companies.rds"))
+
+# Recorte de analise: sem os valores implausiveis, cuja identificacao e
+# justificada na Secao \@ref(qualidade). Todo numero do texto que nao
+# disser o contrario vem deste objeto.
+validas <- empresas[!empresas$capital_suspeito, ]
+
+n_total    <- nrow(empresas)
+n_validas  <- nrow(validas)
+n_suspeito <- sum(empresas$capital_suspeito)
+
+capital  <- validas$capital_stock
+mediana  <- median(capital)
+media    <- mean(capital)
+q        <- quantile(capital, c(.01, .25, .50, .75, .90, .99))
+assim    <- assimetria(capital)
+```
+
+# Introdução {#introducao}
+
+O Cadastro Nacional da Pessoa Jurídica (CNPJ) é o registro das pessoas
+jurídicas brasileiras mantido pela Receita Federal e publicado como dado aberto
+[@receita2026]. Entre os campos declarados está o **capital social**: o valor
+que os sócios formalmente comprometem com a sociedade no ato de constituição ou
+de alteração contratual. É um número de natureza jurídica, não contábil --- ele
+não mede faturamento, patrimônio ou porte econômico efetivo, e pode permanecer
+inalterado por décadas enquanto a empresa cresce ou encolhe.
+
+Essa distância entre o que o campo declara e o que ele é frequentemente lido
+como significando torna o capital social um objeto interessante para análise
+estatística. Este trabalho examina `r numero_pt(n_total)` empresas brasileiras
+com capital social declarado acima de R$ 150 mil, recorte publicado pelo projeto
+TidyTuesday a partir dos dados abertos do CNPJ [@tidytuesday2026].
+
+## Problema e objetivos {#objetivos}
+
+A distribuição do capital social é fortemente assimétrica, o que invalida boa
+parte das descrições usuais: neste conjunto a média é
+`r numero_pt(media / mediana, 1)` vezes a mediana. Descrever "a empresa média"
+por sua média aritmética seria descrever um objeto que não existe. O trabalho
+parte daí e persegue quatro perguntas:
+
+1. **Qual é a forma da distribuição** do capital social declarado, e que
+   medidas a descrevem honestamente? (Seção \@ref(distribuicao))
+2. **O porte declarado acompanha o capital social?** Isto é, as categorias
+   administrativas de microempresa e empresa de pequeno porte separam faixas
+   distintas de capital? (Seção \@ref(porte))
+3. **Quais formas jurídicas concentram capital** além da sua participação em
+   número de empresas, e quanto da aparente diferença entre elas sobrevive ao
+   controle por porte? (Seção \@ref(natureza))
+4. **Qual é o grau de concentração** do capital declarado, medido por
+   instrumentos comparáveis? (Seção \@ref(concentracao))
+
+Uma quinta questão, metodológica, atravessa todas as outras e é tratada em
+separado na Seção \@ref(qualidade): o capital social é um valor **digitado por
+uma pessoa em um formulário**, e as marcas desse processo --- arredondamento,
+valores-âncora, números implausíveis --- precisam ser medidas antes de qualquer
+conclusão substantiva, porque afetam todas elas.
+
+# Materiais e Métodos {#metodos}
+
+## Fonte e estrutura dos dados {#fonte}
+
+Os dados provêm do repositório TidyTuesday, edição de 27 de janeiro de 2026
+[@tidytuesday2026], que por sua vez os extrai dos arquivos abertos do CNPJ
+[@receita2026]. O conjunto publicado já vem filtrado na origem para empresas com
+capital social superior a R$ 150.000,00 --- o menor valor observado é
+`r reais(min(empresas$capital_stock), 2)` --- e enriquecido com os rótulos das
+tabelas auxiliares de natureza jurídica, qualificação do responsável e porte.
+
+São `r numero_pt(n_total)` registros e seis variáveis, descritas na Tabela
+\@ref(tab:dicionario).
+
+```{r dicionario}
+dicionario <- data.frame(
+  Variável = c("company_id", "company_name", "capital_stock",
+               "company_size", "legal_nature", "owner_qualification"),
+  Tipo = c("inteiro", "texto", "numérica",
+           "categórica ordinal", "categórica nominal", "categórica nominal"),
+  Descrição = c(
+    "Identificador de 8 dígitos; único nas 141.332 linhas",
+    "Razão social como consta no registro",
+    "Capital social declarado, em reais",
+    "Porte: microempresa, pequena empresa ou demais",
+    "Forma jurídica da sociedade",
+    "Qualificação de quem responde pela empresa"),
+  Níveis = c(numero_pt(length(unique(empresas$company_id))), "—", "—",
+             as.character(nlevels(empresas$company_size)),
+             numero_pt(length(unique(empresas$legal_nature))),
+             numero_pt(length(unique(empresas$owner_qualification))))
+)
+knitr::kable(dicionario, caption = "Dicionário das variáveis do conjunto analisado.")
+```
+
+Há **uma única variável quantitativa** (`capital_stock`) e três categóricas. O
+conjunto não traz data de abertura, unidade da federação nem atividade econômica
+(CNAE), de modo que análises temporais, geográficas ou setoriais estão fora do
+alcance deste material --- limitação assumida desde o desenho do trabalho, e não
+descoberta ao final.
+
+## Pré-processamento {#preprocessamento}
+
+O tratamento foi deliberadamente mínimo, por três razões: não há valores
+ausentes (`r sum(is.na(empresas))` células vazias em todo o conjunto), não há
+identificadores repetidos (`r sum(duplicated(empresas$company_id))` duplicatas
+de `company_id`) e o conjunto já chega com os rótulos aplicados. Foram feitas
+apenas duas operações:
+
+1. **Ordenação do porte.** `company_size` foi convertido em fator ordenado
+   segundo o código do registro (1 = microempresa, 3 = pequena empresa,
+   5 = demais), e não em ordem alfabética --- que colocaria a maior categoria no
+   meio de qualquer gráfico.
+2. **Marcação de valores implausíveis.** `r numero_pt(n_suspeito)` registros
+   declaram capital igual ou superior a R$ 10 bilhões. Eles foram **marcados, e
+   não removidos**: a coluna `capital_suspeito` permite que cada análise decida.
+   A justificativa do limiar está na Seção \@ref(qualidade).
+
+Salvo menção explícita, as análises a seguir usam as
+`r numero_pt(n_validas)` empresas não marcadas.
+
+## Técnicas empregadas {#tecnicas}
+
+**Medidas de posição.** Dada a assimetria, a mediana é a medida central
+reportada, com os quartis descrevendo a dispersão [@tukey1977]. A média é
+apresentada ao lado da mediana não como medida concorrente, mas porque a
+distância entre as duas é, ela própria, uma medida de assimetria.
+
+**Escala logarítmica.** Os gráficos de capital usam $\log_{10}$. Distribuições
+de valores econômicos positivos e multiplicativos costumam se aproximar da
+log-normal, caso em que a escala logarítmica é a escala natural de leitura
+[@limpert2001]; em reais, a cauda comprime toda a massa de dados contra o eixo.
+
+**Comparação entre grupos.** A hipótese de que o capital tem a mesma
+distribuição entre portes é testada pelo teste de Kruskal-Wallis
+[@kruskal1952], não paramétrico, apropriado à assimetria observada. Com
+`r numero_pt(n_validas)` observações, porém, qualquer diferença não nula produz
+significância estatística, de modo que o valor-$p$ é pouco informativo
+[@huntington2017]. Reporta-se, por isso, o **tamanho de efeito**
+$\varepsilon^2 = (H - k + 1)/(n - k)$, que varia de 0 a 1 e mede a fração da
+variabilidade dos postos explicada pelo agrupamento.
+
+**Associação entre categóricas.** A associação entre forma jurídica e porte é
+medida pelo teste qui-quadrado de independência acompanhado do **V de Cramér**
+[@cramer1946], $V = \sqrt{\chi^2 / (n \cdot (\min(r,c) - 1))}$, pela mesma razão.
+
+**Concentração.** A desigualdade é descrita pela curva de Lorenz [@lorenz1905] e
+resumida pelo índice de Gini [@gini1921], calculado sobre o vetor ordenado por
+$G = \frac{2\sum_{i=1}^{n} i \cdot x_i}{n \sum_{i=1}^{n} x_i} - \frac{n+1}{n}$.
+Um intervalo de confiança é obtido por *bootstrap* não paramétrico.
+
+**Ferramentas.** Todo o processamento foi feito em R `r getRversion()`
+[@rcore2026], com gráficos em **ggplot2** [@wickham2016] e este relatório
+composto em R Markdown [@xie2018]. O código que gera cada número e cada figura
+está embutido neste documento e pode ser exibido pelo botão *Code*.
+
+# Resultados e Discussão {#resultados}
+
+## A forma da distribuição {#distribuicao}
+
+A Tabela \@ref(tab:descritivas) resume o capital social das
+`r numero_pt(n_validas)` empresas analisadas.
+
+```{r descritivas}
+descritivas <- data.frame(
+  Medida = c("Empresas", "Mínimo", "1º quartil", "Mediana", "3º quartil",
+             "90º percentil", "99º percentil", "Máximo",
+             "Média", "Desvio padrão", "Média / mediana",
+             "Assimetria", "Curtose"),
+  Valor = c(
+    numero_pt(n_validas), reais(min(capital)), reais(q[2]), reais(mediana),
+    reais(q[4]), reais(q[5]), reais(q[6]), reais(max(capital)),
+    reais(media), reais(sd(capital)),
+    numero_pt(media / mediana, 1), numero_pt(assim, 1),
+    numero_pt(mean((capital - media)^4) / sd(capital)^4, 1))
+)
+knitr::kable(descritivas, align = c("l", "r"),
+             caption = "Medidas descritivas do capital social declarado, excluídos os valores implausíveis.")
+```
+
+Os números dizem o essencial: a mediana é `r reais(mediana)`, a média é
+`r reais(media)` --- `r numero_pt(media / mediana, 1)` vezes maior --- e a
+assimetria é `r numero_pt(assim, 1)`. Metade das empresas declara entre
+`r reais(q[2])` e `r reais(q[4])`, e ainda assim o máximo chega a
+`r reais_curto(max(capital))`.
+
+A Figura \@ref(fig:histograma) mostra a distribuição em escala logarítmica, com
+as duas medidas de posição marcadas.
+
+```{r histograma, fig.cap = "Distribuição do capital social declarado em escala log10. A linha contínua marca a mediana; a tracejada, a média. A distância entre elas é o retrato da assimetria."}
+ggplot(validas, aes(x = log10_capital)) +
+  geom_histogram(bins = 60, fill = CORES$principal, colour = "white", linewidth = 0.2) +
+  geom_vline(xintercept = log10(mediana), colour = CORES$destaque, linewidth = 0.9) +
+  geom_vline(xintercept = log10(media), colour = CORES$neutro,
+             linetype = "dashed", linewidth = 0.9) +
+  annotate("label", x = log10(mediana), y = Inf, vjust = 1.2, label.size = 0,
+           label = paste("mediana", reais_curto(mediana)), colour = CORES$destaque, size = 3.6) +
+  annotate("label", x = log10(media), y = Inf, vjust = 2.8, label.size = 0,
+           label = paste("média", reais_curto(media)), colour = CORES$neutro, size = 3.6) +
+  scale_x_continuous(labels = rotulo_log10) +
+  scale_y_continuous(labels = function(v) numero_pt(v)) +
+  labs(x = "Capital social (escala log10)", y = "Empresas") +
+  tema_app()
+```
+
+A distribuição é unimodal e aproximadamente simétrica **em escala logarítmica**,
+o que sugere log-normalidade --- comportamento esperado para grandezas
+econômicas geradas por processos multiplicativos [@limpert2001]. A Figura
+\@ref(fig:qqplot) testa essa aproximação visualmente.
+
+```{r qqplot, fig.width = 6, fig.height = 4.4, fig.cap = "Gráfico quantil-quantil do logaritmo do capital contra a distribuição normal. O ajuste é bom no miolo e falha nas pontas, onde o arredondamento (à esquerda) e a cauda pesada (à direita) se impõem."}
+amostra <- validas$log10_capital[sample.int(n_validas, min(20000, n_validas))]
+qq <- qqnorm(amostra, plot.it = FALSE)
+ggplot(data.frame(teorico = qq$x, observado = qq$y), aes(teorico, observado)) +
+  geom_point(alpha = 0.12, size = 0.7, colour = CORES$principal) +
+  geom_abline(slope = sd(amostra), intercept = mean(amostra),
+              colour = CORES$destaque, linewidth = 0.8) +
+  labs(x = "Quantis teóricos (normal)", y = "log10 do capital observado") +
+  tema_app()
+```
+
+O ajuste é razoável no centro e se afasta nas duas pontas. O desvio à esquerda
+não é uma propriedade econômica: é o efeito dos valores arredondados discutido
+na Seção \@ref(qualidade), que produz degraus onde a log-normal prevê uma rampa
+contínua. Trata-se, portanto, de uma aproximação útil para descrição, e não de
+um modelo que se deva levar a sério para inferência.
+
+## Porte declarado e capital social {#porte}
+
+A Tabela \@ref(tab:porte) compara os três portes.
+
+```{r porte}
+validas$porte <- porte_pt(validas$company_size)
+partes <- split(validas$capital_stock, validas$porte)
+
+tab_porte <- data.frame(
+  Porte = names(partes),
+  Empresas = numero_pt(vapply(partes, length, integer(1))),
+  `1º quartil` = reais(vapply(partes, quantile, numeric(1), probs = .25)),
+  Mediana = reais(vapply(partes, median, numeric(1))),
+  `3º quartil` = reais(vapply(partes, quantile, numeric(1), probs = .75)),
+  Média = reais(vapply(partes, mean, numeric(1))),
+  check.names = FALSE
+)
+knitr::kable(tab_porte, align = c("l", rep("r", 5)),
+             caption = "Capital social por porte declarado.")
+
+kw <- kruskal.test(capital_stock ~ porte, data = validas)
+k_grupos <- length(partes)
+epsilon2 <- (unname(kw$statistic) - k_grupos + 1) / (n_validas - k_grupos)
+
+med_micro   <- median(partes[["Microempresa"]])
+med_pequena <- median(partes[["Pequena empresa"]])
+med_demais  <- median(partes[["Demais empresas"]])
+```
+
+O teste de Kruskal-Wallis rejeita a hipótese de distribuições iguais
+($H =$ `r numero_pt(unname(kw$statistic), 1)`, $p <$ 0,001), o que era
+previsível com `r numero_pt(n_validas)` observações. O tamanho de efeito conta a
+história real: $\varepsilon^2 =$ `r numero_pt(epsilon2, 3)`, ou seja, o porte
+declarado explica cerca de `r numero_pt(100 * epsilon2, 1)`% da variabilidade
+dos postos do capital.
+
+E a comparação par a par mostra **onde** está essa pouca separação. A mediana da
+microempresa é `r reais(med_micro)` e a da pequena empresa é
+`r reais(med_pequena)` --- uma razão de
+`r numero_pt(med_pequena / med_micro, 2)`, com primeiro quartil idêntico nas
+duas. Já "demais empresas" tem mediana de `r reais(med_demais)`,
+`r numero_pt(med_demais / med_micro, 1)` vezes a da microempresa. A Figura
+\@ref(fig:boxplot-porte) mostra as três distribuições sobrepostas.
+
+```{r boxplot-porte, fig.cap = "Capital social por porte, em escala log10. Microempresa e pequena empresa praticamente se sobrepõem; apenas a categoria residual se separa."}
+ggplot(validas, aes(x = log10_capital, y = porte, fill = porte)) +
+  geom_boxplot(outlier.shape = NA, width = 0.55, colour = "#3C4858") +
+  coord_cartesian(xlim = as.numeric(quantile(validas$log10_capital, c(0.001, 0.995)))) +
+  scale_x_continuous(labels = rotulo_log10) +
+  scale_fill_manual(values = CORES$porte, guide = "none") +
+  labs(x = "Capital social (escala log10)", y = NULL) +
+  tema_app()
+```
+
+Este é o primeiro achado substantivo do trabalho, e ele tem explicação
+institucional, não estatística: **o porte no registro é definido pela receita
+bruta anual**, nos termos da Lei Complementar nº 123/2006 [@brasil2006;
+@sebrae2024], e não pelo capital social. São duas grandezas distintas, apuradas
+por critérios distintos, e não há razão para que andem juntas. A quase
+coincidência entre microempresa e pequena empresa é, portanto, o resultado
+esperado --- e o que mereceria explicação seria o contrário.
+
+## Forma jurídica e concentração de capital {#natureza}
+
+Das `r numero_pt(length(unique(validas$legal_nature)))` naturezas jurídicas
+presentes, uma domina a contagem: `r numero_pt(100 * max(prop.table(table(validas$legal_nature))), 1)`%
+das empresas são sociedades limitadas. Contar empresas, portanto, diz pouco. A
+Tabela \@ref(tab:natureza) usa uma medida relativa --- a razão entre a fatia do
+capital e a fatia das empresas --- que identifica quem concentra capital além do
+próprio tamanho.
+
+```{r natureza}
+g <- split(validas$capital_stock, validas$legal_nature)
+nat <- data.frame(
+  natureza = names(g),
+  n = vapply(g, length, integer(1)),
+  total = vapply(g, sum, numeric(1)),
+  mediana = vapply(g, median, numeric(1)),
+  row.names = NULL
+)
+nat$p_emp <- nat$n / sum(nat$n)
+nat$p_cap <- nat$total / sum(nat$total)
+nat$peso <- nat$p_cap / nat$p_emp
+
+elegiveis <- nat[nat$n >= 20, ]
+elegiveis <- elegiveis[order(-elegiveis$peso), ]
+campea <- elegiveis[1, ]
+
+knitr::kable(
+  data.frame(
+    `Natureza jurídica` = encurtar(utils::head(elegiveis$natureza, 8), 44),
+    Empresas = numero_pt(utils::head(elegiveis$n, 8)),
+    `% das empresas` = paste0(numero_pt(100 * utils::head(elegiveis$p_emp, 8), 2), "%"),
+    `% do capital` = paste0(numero_pt(100 * utils::head(elegiveis$p_cap, 8), 2), "%"),
+    `Peso relativo` = paste0(numero_pt(utils::head(elegiveis$peso, 8), 1), "×"),
+    Mediana = reais(utils::head(elegiveis$mediana, 8)),
+    check.names = FALSE),
+  align = c("l", rep("r", 5)),
+  caption = "As oito naturezas jurídicas de maior peso relativo, entre as que reúnem ao menos 20 empresas. Peso relativo acima de 1 indica concentração de capital superior à participação em número de empresas."
+)
+```
+
+A sociedade anônima de capital aberto é o caso extremo: `r numero_pt(campea$n)`
+empresas, `r numero_pt(100 * campea$p_emp, 2)`% do total, respondem por
+`r numero_pt(100 * campea$p_cap, 2)`% do capital declarado --- peso relativo de
+`r numero_pt(campea$peso, 1)` vezes.
+
+Esse resultado, porém, não pode ser lido isoladamente, porque forma jurídica e
+porte não são independentes: sociedades anônimas tendem a ser grandes. A Tabela
+\@ref(tab:associacao) mede essa dependência.
+
+```{r associacao}
+top_nat <- names(sort(table(validas$legal_nature), decreasing = TRUE))[1:5]
+sub <- validas[validas$legal_nature %in% top_nat, ]
+tabela_cont <- table(encurtar(sub$legal_nature, 30), sub$porte)
+
+qui <- suppressWarnings(chisq.test(tabela_cont))
+v_cramer <- sqrt(unname(qui$statistic) /
+                   (sum(tabela_cont) * (min(dim(tabela_cont)) - 1)))
+
+perfil <- round(100 * prop.table(tabela_cont, 1), 1)
+
+# As linhas sao localizadas por busca, e nao escritas a mao: os rotulos
+# passam por encurtar() e um nome digitado aqui sairia do lugar assim que
+# o limite de caracteres mudasse.
+pct_perfil <- function(padrao, coluna = "Demais empresas") {
+  i <- grep(padrao, rownames(perfil))[1]
+  if (is.na(i)) return(NA_real_)
+  perfil[i, coluna]
+}
+p_sa_demais   <- pct_perfil("^Privately")
+p_ltda_demais <- pct_perfil("^Limited")
+
+knitr::kable(perfil,
+             caption = "Distribuição percentual do porte dentro de cada uma das cinco naturezas jurídicas mais frequentes (percentuais por linha).")
+```
+
+A associação é forte: $\chi^2 =$ `r numero_pt(unname(qui$statistic), 0)` com
+`r qui$parameter` graus de liberdade e **V de Cramér** de
+`r numero_pt(v_cramer, 3)`. A leitura por linha explicita o mecanismo:
+`r numero_pt(p_sa_demais, 1)`% das sociedades anônimas fechadas estão na
+categoria residual de porte, contra `r numero_pt(p_ltda_demais, 1)`% das
+sociedades limitadas.
+
+Daqui segue uma advertência metodológica que vale para todo o trabalho: o peso
+relativo da Tabela \@ref(tab:natureza) **não isola o efeito da forma jurídica**.
+Parte substancial do que ele mede é a composição de porte dentro de cada
+natureza. Separar os dois efeitos exigiria estratificar --- comparar naturezas
+jurídicas *dentro* de cada porte ---, e a interface interativa que acompanha
+este relatório permite fazê-lo. Afirmar que "constituir-se como S.A. eleva o
+capital social" seria inverter a direção plausível da causalidade: é a empresa
+que já pretende capital elevado que se constitui como sociedade anônima.
+
+## Concentração {#concentracao}
+
+```{r gini-calculo}
+g_base <- gini_relatorio <- {
+  # A funcao gini() vive em R/aba08_concentracao.R, junto da aba que a usa.
+  # Aqui ela e redefinida para o relatorio nao depender de um arquivo do
+  # aplicativo - o documento tem de compilar sozinho.
+  f <- function(x) {
+    x <- sort(x[!is.na(x) & x > 0]); n <- length(x)
+    (2 * sum(seq_len(n) * x) / (n * sum(x))) - (n + 1) / n
+  }
+  f(capital)
+}
+
+set.seed(302)
+boot <- replicate(200, {
+  amostra <- sample(capital, length(capital), replace = TRUE)
+  x <- sort(amostra); n <- length(x)
+  (2 * sum(seq_len(n) * x) / (n * sum(x))) - (n + 1) / n
+})
+ic <- quantile(boot, c(.025, .975))
+
+corte_top1 <- quantile(capital, .99)
+share_top1 <- sum(capital[capital >= corte_top1]) / sum(capital)
+share_metade <- sum(capital[capital <= mediana]) / sum(capital)
+```
+
+O índice de Gini do capital social declarado é
+**`r numero_pt(g_base, 3)`** (IC 95% por *bootstrap*:
+`r numero_pt(ic[1], 3)` -- `r numero_pt(ic[2], 3)`). A metade das empresas com
+menor capital detém `r numero_pt(100 * share_metade, 1)`% do total, enquanto o
+1% do topo detém `r numero_pt(100 * share_top1, 1)`%. A Figura
+\@ref(fig:lorenz) mostra a curva.
+
+```{r lorenz, fig.cap = "Curva de Lorenz do capital social declarado. A diagonal representa a igualdade perfeita; quanto mais a curva afunda, maior a concentração."}
+x <- sort(capital)
+n <- length(x)
+idx <- unique(round(seq(1, n, length.out = 600)))
+curva <- data.frame(p = c(0, idx / n), acumulado = c(0, cumsum(x)[idx] / sum(x)))
+
+ggplot(curva, aes(p, acumulado)) +
+  geom_abline(slope = 1, intercept = 0, colour = CORES$neutro, linetype = "dashed") +
+  geom_line(colour = CORES$principal, linewidth = 1) +
+  scale_x_continuous(labels = function(v) paste0(numero_pt(100 * v), "%")) +
+  scale_y_continuous(labels = function(v) paste0(numero_pt(100 * v), "%")) +
+  labs(x = "Empresas, da menor para a maior", y = "Capital acumulado") +
+  tema_app()
+```
+
+Um Gini de `r numero_pt(g_base, 3)` é alto em termos absolutos, mas a
+comparação natural --- com o Gini de renda de um país --- é inadequada por duas
+razões. Primeiro, a unidade aqui é a **empresa**, e empresas variam em escala
+muito mais do que pessoas variam em renda. Segundo, e mais importante, o
+conjunto já está **truncado em R$ 150 mil na origem**: toda a metade inferior da
+distribuição real de capital social foi removida antes de os dados chegarem a
+nós. Truncamento à esquerda reduz a desigualdade medida, de modo que
+`r numero_pt(g_base, 3)` é um **piso**, não uma estimativa do universo das
+empresas brasileiras.
+
+## A qualidade do registro {#qualidade}
+
+Esta seção examina o capital social não como medida econômica, mas como valor
+digitado. Três padrões o caracterizam.
+
+```{r qualidade-numeros}
+todos <- empresas$capital_stock
+distintos <- length(unique(todos))
+mais_comuns <- sort(table(todos), decreasing = TRUE)
+cobertura10 <- sum(utils::head(mais_comuns, 10)) / length(todos)
+p_10mil <- mean(todos %% 1e4 == 0)
+p_centavos <- mean(todos %% 1 != 0)
+suspeitos <- empresas[empresas$capital_suspeito, ]
+share_suspeito <- sum(suspeitos$capital_stock) / sum(todos)
+```
+
+**Valores-âncora.** Há apenas `r numero_pt(distintos)` valores distintos para
+`r numero_pt(n_total)` empresas. O valor mais declarado,
+`r reais(as.numeric(names(mais_comuns)[1]))`, aparece
+`r numero_pt(mais_comuns[[1]])` vezes --- `r numero_pt(100 * mais_comuns[[1]] / n_total, 1)`%
+da base --- e os dez valores mais comuns cobrem `r numero_pt(100 * cobertura10, 1)`%
+do conjunto (Figura \@ref(fig:ancoras)). O capital social declarado não se
+comporta como variável contínua: é um pequeno conjunto de âncoras com cauda.
+
+```{r ancoras, fig.cap = "Os doze valores de capital social mais declarados e quantas empresas declaram exatamente cada um."}
+anc <- data.frame(valor = as.numeric(names(mais_comuns)), n = as.integer(mais_comuns))
+anc <- utils::head(anc, 12)
+anc$rotulo <- factor(reais(anc$valor), levels = rev(reais(anc$valor)))
+
+ggplot(anc, aes(x = n, y = rotulo)) +
+  geom_col(fill = CORES$principal, width = 0.72) +
+  geom_text(aes(label = numero_pt(n)), hjust = -0.15, size = 3.4, colour = CORES$neutro) +
+  scale_x_continuous(expand = expansion(mult = c(0, 0.18)),
+                     labels = function(v) numero_pt(v)) +
+  labs(x = "Empresas", y = NULL) +
+  tema_app() +
+  theme(panel.grid.major.y = element_blank())
+```
+
+**Arredondamento.** `r numero_pt(100 * p_10mil, 1)`% das empresas declaram
+múltiplo exato de R$ 10 mil, e apenas `r numero_pt(100 * p_centavos, 2)`%
+declaram centavos. Os degraus visíveis na Figura \@ref(fig:histograma) são,
+portanto, artefato de arredondamento humano, e não concentração econômica em
+faixas específicas --- distinção que uma leitura apressada do histograma
+inverteria.
+
+**Valores implausíveis.** `r numero_pt(n_suspeito)` empresas declaram capital
+igual ou superior a R$ 10 bilhões, e a estrutura desses valores denuncia o
+problema: `r numero_pt(sum(suspeitos$capital_stock == 1e11))` declaram
+exatamente R$ 100.000.000.000,00 e
+`r numero_pt(sum(suspeitos$capital_stock == 999999999999))` declaram
+R$ 999.999.999.999,00 --- o maior número que cabe em doze dígitos. Não é uma
+distribuição de empresas grandes; é um conjunto de repetições de números
+redondos enormes, com a assinatura clássica de preenchimento indevido de
+formulário.
+
+O efeito dessas `r numero_pt(n_suspeito)` linhas ---
+`r numero_pt(100 * n_suspeito / n_total, 3)`% do conjunto --- é
+desproporcional, como mostra a Tabela \@ref(tab:efeito-suspeitos).
+
+```{r efeito-suspeitos}
+comparacao <- data.frame(
+  Medida = c("Empresas", "Capital total", "Média", "Mediana",
+             "Média / mediana", "Índice de Gini"),
+  `Com os implausíveis` = c(
+    numero_pt(n_total), reais_curto(sum(todos)), reais(mean(todos)),
+    reais(median(todos)), numero_pt(mean(todos) / median(todos), 1),
+    numero_pt(gini_relatorio <- {
+      f <- function(v) { v <- sort(v[v > 0]); m <- length(v)
+        (2 * sum(seq_len(m) * v) / (m * sum(v))) - (m + 1) / m }
+      f(todos)}, 3)),
+  `Sem os implausíveis` = c(
+    numero_pt(n_validas), reais_curto(sum(capital)), reais(media),
+    reais(mediana), numero_pt(media / mediana, 1), numero_pt(g_base, 3)),
+  check.names = FALSE
+)
+knitr::kable(comparacao, align = c("l", "r", "r"),
+             caption = "Efeito dos 262 valores implausíveis sobre as medidas do conjunto.")
+```
+
+Incluídos, eles respondem por `r numero_pt(100 * share_suspeito, 1)`% de todo o
+capital da base e multiplicam a média por
+`r numero_pt(mean(todos) / media, 1)`. A mediana, por construção, não se move. É
+a demonstração prática do argumento da Seção \@ref(tecnicas): em distribuições
+com cauda pesada e dados sujos, a mediana não é apenas mais representativa ---
+ela é mais **robusta**, e essa é a razão técnica da escolha.
+
+A decisão de marcar em vez de excluir merece registro. Excluir silenciosamente
+produziria um conjunto mais limpo e um relatório menos honesto: o leitor não
+saberia que 97% do capital agregado do registro bruto é ficção de formulário, e
+esse é um resultado do trabalho, não um detalhe de limpeza.
+
+# Conclusão {#conclusao}
+
+O capital social declarado das `r numero_pt(n_total)` empresas analisadas é
+fortemente assimétrico: mediana de `r reais(mediana)` contra média de
+`r reais(media)`, com índice de Gini de `r numero_pt(g_base, 3)`. A escala
+logarítmica aproxima a distribuição de uma log-normal no miolo, com desvios nas
+pontas atribuíveis a arredondamento e a valores implausíveis.
+
+Quanto às perguntas da Seção \@ref(objetivos):
+
+1. **A forma da distribuição** exige mediana e quartis; a média descreve os
+   extremos, não o centro.
+2. **O porte declarado quase não separa o capital.** O tamanho de efeito do
+   agrupamento é $\varepsilon^2 =$ `r numero_pt(epsilon2, 3)`, e microempresa e
+   pequena empresa têm medianas na razão de
+   `r numero_pt(med_pequena / med_micro, 2)`. O resultado é coerente com a
+   definição legal de porte, baseada em receita bruta e não em capital.
+3. **A forma jurídica concentra capital de modo muito desigual** --- peso
+   relativo de `r numero_pt(campea$peso, 1)` vezes para as sociedades anônimas
+   de capital aberto ---, mas forma jurídica e porte são fortemente associados
+   (V de Cramér `r numero_pt(v_cramer, 3)`), e o efeito isolado de cada um não é
+   identificável com as variáveis disponíveis.
+4. **A concentração é alta e subestimada**, porque o conjunto está truncado em
+   R$ 150 mil na origem.
+
+A conclusão metodológica é a que mais se generaliza. Em
+`r numero_pt(n_total)` registros, `r numero_pt(n_suspeito)` linhas ---
+`r numero_pt(100 * n_suspeito / n_total, 3)`% --- determinam
+`r numero_pt(100 * share_suspeito, 1)`% do capital agregado. Uma análise que
+tivesse começado pela média, sem examinar a qualidade do registro, teria
+reportado um capital médio de `r reais(mean(todos))` e estaria errada por quase
+duas ordens de grandeza. O exame da qualidade do dado não é etapa preliminar:
+neste conjunto, é o resultado principal.
+
+**Limitações.** O conjunto não traz data, localização nem atividade econômica,
+o que impede análises temporais, regionais e setoriais. O truncamento em
+R$ 150 mil impede qualquer afirmação sobre o universo das empresas brasileiras.
+E o capital social, por sua própria natureza jurídica, não mede porte econômico
+--- apenas o que foi declarado em contrato social, eventualmente há décadas.
+
+**Trabalhos futuros.** O cruzamento com a base completa do CNPJ, que inclui UF,
+CNAE e data de abertura, permitiria estratificar os resultados e verificar se os
+padrões de arredondamento variam por região, por setor ou por década de
+constituição --- esta última uma hipótese natural, dado que valores declarados
+em contratos antigos não se corrigem pela inflação.
+
+# Referências {#referencias}

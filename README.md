@@ -19,7 +19,7 @@ a partir do Cadastro Nacional da Pessoa Jurídica (Receita Federal).
 |---|---|
 | Aplicativo Shiny | _a publicar (shinyapps.io)_ |
 | Vídeo de apresentação | _a gravar (YouTube)_ |
-| Relatório | `relatorio/` — _a fazer_ |
+| Relatório | [`relatorio/relatorio.Rmd`](relatorio/relatorio.Rmd) — **pronto**, renderizado em `relatorio.html` |
 
 ## Como rodar
 
