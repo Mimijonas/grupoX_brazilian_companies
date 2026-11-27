@@ -148,10 +148,13 @@ p code, li code { font-size: 10.5pt; background: #f2f2f2; padding: 0 2pt; }
 
 /* ---- Referencias ---- */
 #refs { font-size: 11pt; line-height: 1.35; text-align: left; }
+/* Na ABNT as referencias sao alinhadas a margem esquerda, com espaco
+   simples e separadas por uma linha em branco. Nao ha recuo pendente,
+   que e convencao da APA. */
 #refs > div {
   margin-bottom: 0.3cm;
-  padding-left: 1cm;
-  text-indent: -1cm;
+  padding-left: 0;
+  text-indent: 0;
 }
 
 /* ---- Formulas ---- */

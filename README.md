@@ -56,6 +56,7 @@ dados/tratados/            companies.rds (versionado: o app precisa dele)
 dados/brutos/              CSV originais (fora do repositório)
 relatorio/relatorio.Rmd    o relatório
 relatorio/impressao.css    folha de estilo A4 (corpo 12pt, entrelinha 1,5)
+relatorio/abnt.csl         estilo de citacao ABNT (NBR 6023 / 10520)
 relatorio/render.R         renderiza o .Rmd e imprime o PDF
 ```
 
@@ -71,6 +72,11 @@ exige uma distribuição LaTeX instalada; o Chrome já está na máquina e respe
 a folha de estilo `impressao.css`, onde ficam as margens, o corpo de 12pt e a
 entrelinha de 1,5. O número de páginas do PDF é, portanto, o número de páginas
 que se vê no papel: **30**.
+
+As citações e as referências seguem a **ABNT**, pelo estilo CSL oficial
+(`abnt.csl`). Uma linha dele foi alterada e o motivo está comentado no próprio
+arquivo: o estilo publicado traz a citação entre parênteses com só a primeira
+letra maiúscula, e a NBR 10520 pede a fonte em maiúsculas nesse caso.
 
 Nenhum valor numérico do texto foi digitado. Todos saem de código embutido
 (`` `r ...` ``) sobre `dados/tratados/companies.rds`, de modo que mudar o

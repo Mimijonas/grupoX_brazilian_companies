@@ -140,6 +140,7 @@ code span.wa { color: #8f5902; font-weight: bold; font-style: italic; }
 div.csl-bib-body { }
 div.csl-entry {
 clear: both;
+margin-bottom: 1em;
 }
 .hanging div.csl-entry {
 margin-left:2em;
@@ -291,10 +292,11 @@ code { font-family: "DejaVu Sans Mono", "Menlo", "Courier New", monospace; }
 p code, li code { font-size: 10.5pt; background: #f2f2f2; padding: 0 2pt; }
 
 #refs { font-size: 11pt; line-height: 1.35; text-align: left; }
+
 #refs > div {
 margin-bottom: 0.3cm;
-padding-left: 1cm;
-text-indent: -1cm;
+padding-left: 0;
+text-indent: 0;
 }
 
 .math.display { margin: 0.3cm 0; text-align: center; }
@@ -372,10 +374,10 @@ pre { background: #f6f6f6 !important; -webkit-print-color-adjust: exact; print-c
 <p>Toda sociedade empresária constituída no Brasil declara, no ato de registro,
 o valor do seu capital social: a soma que os sócios formalmente comprometem
 com a pessoa jurídica, em dinheiro ou em bens suscetíveis de avaliação
-econômica, nos termos do art. 997 do Código Civil <span class="citation">(<a href="#ref-brasil2002">Brasil 2002</a>)</span>. Esse valor
+econômica, nos termos do art. 997 do Código Civil <span class="citation">(<a href="#ref-brasil2002">BRASIL, 2002</a>)</span>. Esse valor
 é averbado no Cadastro Nacional da Pessoa Jurídica (CNPJ), mantido pela
 Secretaria Especial da Receita Federal, e integra o conjunto de dados abertos
-que o órgão publica periodicamente <span class="citation">(<a href="#ref-receita2026">Brasil. Ministério da Fazenda. Secretaria Especial da Receita Federal 2026</a>)</span>.</p>
+que o órgão publica periodicamente <span class="citation">(<a href="#ref-receita2026">RECEITA FEDERAL DO BRASIL, 2026</a>)</span>.</p>
 <p>A natureza desse campo merece atenção antes de qualquer análise, porque
 determina o que ele pode e o que não pode informar. O capital social não é
 receita, não é faturamento e não é patrimônio corrente. É uma declaração de
@@ -399,7 +401,7 @@ Localizar essas marcas e medir a sua extensão é boa parte do que se segue.</p>
 riqueza, tamanho de firma, volume de vendas e valor de ativos apresentam, com
 regularidade documentada há mais de um século, distribuições fortemente
 assimétricas à direita, frequentemente bem aproximadas pela lognormal no corpo
-e por uma lei de potência na cauda <span class="citation">(<a href="#ref-pareto1896">Pareto 1896</a>; <a href="#ref-aitchison1957">Aitchison e Brown 1957</a>; <a href="#ref-limpert2001">Limpert et al. 2001</a>)</span>.
+e por uma lei de potência na cauda <span class="citation">(<a href="#ref-aitchison1957">AITCHISON; BROWN, 1957</a>; <a href="#ref-limpert2001">LIMPERT; STAHEL; ABBT, 2001</a>; <a href="#ref-pareto1896">PARETO, 1896</a>)</span>.
 A consequência prática dessa regularidade é que os resumos estatísticos
 aprendidos para dados simétricos deixam de ser informativos: a média deixa de
 representar o caso típico, o desvio padrão deixa de delimitar uma faixa
@@ -459,7 +461,7 @@ mostram.</p>
 <h2><span class="header-section-number">2.1</span> Origem dos dados e recorte</h2>
 <p>Os dados provêm do projeto TidyTuesday, iniciativa semanal de divulgação de
 conjuntos de dados para prática de análise em R, na edição de 27 de janeiro de
-2026 <span class="citation">(<a href="#ref-tidytuesday2026">Silva e TidyTuesday 2026</a>)</span>. O conjunto foi extraído do CNPJ e distribuído em
+2026 <span class="citation">(<a href="#ref-tidytuesday2026">R4DS ONLINE LEARNING COMMUNITY, 2026</a>)</span>. O conjunto foi extraído do CNPJ e distribuído em
 quatro arquivos CSV: um com os cadastros das empresas e três com as tabelas de
 domínio que traduzem os códigos de natureza jurídica, de qualificação do
 responsável e de porte.</p>
@@ -556,11 +558,11 @@ categórica.</p>
 <div id="ambiente" class="section level2" number="2.3">
 <h2><span class="header-section-number">2.3</span> Ambiente computacional e reprodutibilidade</h2>
 <p>A análise foi conduzida em R 4.6.1
-<span class="citation">(<a href="#ref-rcore2026">R Core Team 2026</a>)</span>. Os gráficos foram produzidos com ggplot2 <span class="citation">(<a href="#ref-wickham2016">Wickham 2016</a>)</span> e o
+<span class="citation">(<a href="#ref-rcore2026">R CORE TEAM, 2026</a>)</span>. Os gráficos foram produzidos com ggplot2 <span class="citation">(<a href="#ref-wickham2016">WICKHAM, 2016</a>)</span> e o
 relatório foi escrito em R Markdown, compilado com knitr e com as extensões de
-referência cruzada do pacote bookdown <span class="citation">(<a href="#ref-xie2018">Xie et al. 2018</a>; <a href="#ref-xie2016">Xie 2016</a>)</span>. O aplicativo
+referência cruzada do pacote bookdown <span class="citation">(<a href="#ref-xie2016">XIE, 2016</a>; <a href="#ref-xie2018">XIE; ALLAIRE; GROLEMUND, 2018</a>)</span>. O aplicativo
 interativo que compõe a segunda parte do trabalho foi construído com shiny
-<span class="citation">(<a href="#ref-chang2026">Chang et al. 2026</a>)</span>.</p>
+<span class="citation">(<a href="#ref-chang2026">CHANG et al., 2026</a>)</span>.</p>
 <p>Nenhuma biblioteca externa de estatística foi utilizada para os
 procedimentos centrais. O índice de Gini, o coeficiente de assimetria, o
 tamanho de efeito do teste de Kruskal-Wallis, o V de Cramér e o estimador de
@@ -627,7 +629,7 @@ resistentes a valores extremos. Relatam-se a mediana, os quartis e os
 percentis de 1, 10, 90 e 99, acompanhados da amplitude interquartílica. A
 média e o desvio padrão são informados, porém com a finalidade explícita de
 exibir a sua inadequação neste caso, exercício na linha da análise
-exploratória proposta por <span class="citation">Tukey (<a href="#ref-tukey1977">1977</a>)</span>.</p>
+exploratória proposta por Tukey <span class="citation">(<a href="#ref-tukey1977">1977</a>)</span>.</p>
 <p>O coeficiente de assimetria é calculado como o terceiro momento padronizado,
 <span class="math inline">\(g_1 = m_3 / m_2^{3/2}\)</span>, com os momentos centrais estimados pela divisão por
 <span class="math inline">\(n\)</span>. Toda a visualização da variável é feita em escala logarítmica de base
@@ -636,13 +638,13 @@ bilhões e mediana na casa das centenas de milhares, mais de noventa por cento
 das observações se acumulariam na primeira barra de um histograma e a figura
 não informaria nada. A adequação da transformação é avaliada por gráfico
 quantil-quantil do logaritmo contra a distribuição normal, procedimento usual
-quando se suspeita de comportamento lognormal <span class="citation">(<a href="#ref-limpert2001">Limpert et al. 2001</a>)</span>.</p>
+quando se suspeita de comportamento lognormal <span class="citation">(<a href="#ref-limpert2001">LIMPERT; STAHEL; ABBT, 2001</a>)</span>.</p>
 </div>
 <div id="tec-grupos" class="section level3" number="2.5.2">
 <h3><span class="header-section-number">2.5.2</span> Comparação entre grupos</h3>
 <p>A comparação do capital entre os níveis de porte e entre as formas jurídicas
-usa o teste de Kruskal-Wallis <span class="citation">(<a href="#ref-kruskal1952">Kruskal e Wallis 1952</a>)</span>, extensão não paramétrica da
-análise de variância baseada em postos <span class="citation">(<a href="#ref-tomkins1984">Conover e Iman 1981</a>)</span>. A escolha decorre da
+usa o teste de Kruskal-Wallis <span class="citation">(<a href="#ref-kruskal1952">KRUSKAL; WALLIS, 1952</a>)</span>, extensão não paramétrica da
+análise de variância baseada em postos <span class="citation">(<a href="#ref-tomkins1984">CONOVER; IMAN, 1981</a>)</span>. A escolha decorre da
 forma da distribuição: a análise de variância clássica pressupõe normalidade
 dos resíduos e homogeneidade de variâncias, e nenhuma das duas se sustenta
 aqui, nem mesmo após a transformação logarítmica, como o gráfico
@@ -651,7 +653,7 @@ quantil-quantil deixa ver.</p>
 Com mais de cento e quarenta mil observações, qualquer diferença entre grupos,
 ainda que trivial, produz rejeição da hipótese nula. Esse comportamento é bem
 documentado e constitui um dos argumentos centrais contra o uso do valor-p
-como medida de relevância em grandes amostras <span class="citation">(<a href="#ref-huntington2017">Huntington-Klein 2017</a>)</span>. Relata-se
+como medida de relevância em grandes amostras <span class="citation">(<a href="#ref-huntington2017">HUNTINGTON-KLEIN, 2017</a>)</span>. Relata-se
 portanto, junto ao teste, o tamanho de efeito</p>
 <p><span class="math display">\[\varepsilon^2 = \frac{H - k + 1}{n - k},\]</span></p>
 <p>em que <span class="math inline">\(H\)</span> é a estatística do teste, <span class="math inline">\(k\)</span> o número de grupos e <span class="math inline">\(n\)</span> o número de
@@ -659,13 +661,13 @@ observações. A quantidade se interpreta como a proporção da variabilidade do
 postos atribuível ao agrupamento, e permite dizer se a diferença detectada é
 grande ou pequena, pergunta que o valor-p não responde. Adotam-se como
 referência os patamares convencionais de 0,01, 0,06 e 0,14 para efeitos
-pequeno, médio e grande <span class="citation">(<a href="#ref-cohen1988">Cohen 1988</a>)</span>.</p>
+pequeno, médio e grande <span class="citation">(<a href="#ref-cohen1988">COHEN, 1988</a>)</span>.</p>
 </div>
 <div id="tec-associacao" class="section level3" number="2.5.3">
 <h3><span class="header-section-number">2.5.3</span> Associação entre variáveis categóricas</h3>
 <p>A associação entre porte e forma jurídica é avaliada pelo teste de
 independência de qui-quadrado sobre a tabela de contingência, com o
-coeficiente V de Cramér como medida de intensidade <span class="citation">(<a href="#ref-cramer1946">Cramér 1946</a>)</span>:</p>
+coeficiente V de Cramér como medida de intensidade <span class="citation">(<a href="#ref-cramer1946">CRAMÉR, 1946</a>)</span>:</p>
 <p><span class="math display">\[V = \sqrt{\frac{\chi^2}{n\,(\min(r,c) - 1)}},\]</span></p>
 <p>em que <span class="math inline">\(r\)</span> e <span class="math inline">\(c\)</span> são o número de linhas e de colunas da tabela. O coeficiente
 varia entre zero e um e, ao contrário da estatística de qui-quadrado, não
@@ -677,18 +679,18 @@ porte entre elas, e a leitura causal ingênua fica interditada.</p>
 </div>
 <div id="tec-concentracao" class="section level3" number="2.5.4">
 <h3><span class="header-section-number">2.5.4</span> Medidas de concentração</h3>
-<p>A concentração do capital é descrita pela curva de Lorenz <span class="citation">(<a href="#ref-lorenz1905">Lorenz 1905</a>)</span>, que
+<p>A concentração do capital é descrita pela curva de Lorenz <span class="citation">(<a href="#ref-lorenz1905">LORENZ, 1905</a>)</span>, que
 relaciona a proporção acumulada de empresas, ordenadas do menor para o maior
 capital, à proporção acumulada do capital total que elas detêm. O índice de
-Gini <span class="citation">(<a href="#ref-gini1921">Gini 1921</a>)</span> resume a curva pela razão entre a área que a separa da
+Gini <span class="citation">(<a href="#ref-gini1921">GINI, 1921</a>)</span> resume a curva pela razão entre a área que a separa da
 diagonal de igualdade e a área total sob a diagonal. O cálculo adotado usa a
 forma baseada na covariância entre o valor e o seu posto:</p>
 <p><span class="math display">\[G = \frac{2\sum_{i=1}^{n} i\,x_{(i)}}{n\sum_{i=1}^{n} x_{(i)}} - \frac{n+1}{n},\]</span></p>
 <p>com <span class="math inline">\(x_{(i)}\)</span> denotando a <span class="math inline">\(i\)</span>-ésima observação em ordem crescente. Essa forma
 é algebricamente equivalente à definição por áreas e dispensa integração
-numérica, o que importa em uma base deste tamanho <span class="citation">(<a href="#ref-cowell2011">Cowell 2011</a>)</span>.</p>
+numérica, o que importa em uma base deste tamanho <span class="citation">(<a href="#ref-cowell2011">COWELL, 2011</a>)</span>.</p>
 <p>A incerteza do índice é estimada por reamostragem com reposição
-<span class="citation">(<a href="#ref-efron1979">Efron 1979</a>)</span>, com mil repetições, reportando-se o intervalo percentílico de
+<span class="citation">(<a href="#ref-efron1979">EFRON, 1979</a>)</span>, com mil repetições, reportando-se o intervalo percentílico de
 95 por cento. O procedimento é necessário porque o índice de Gini é uma
 estatística de forma complicada, sem expressão fechada simples para o erro
 padrão, e porque a sua sensibilidade à cauda superior torna razoável duvidar
@@ -702,8 +704,8 @@ acumulam. O segundo é a análise do grau de arredondamento, medido pelo número
 de zeros à direita de cada valor inteiro declarado, que quantifica em que
 medida as declarações são números redondos em vez de montantes calculados. O
 terceiro é a distribuição do primeiro dígito significativo, confrontada com a
-lei de Benford <span class="citation">(<a href="#ref-benford1938">Benford 1938</a>)</span>, ferramenta corrente em auditoria para detectar
-dados que não se formaram por processo natural de medida <span class="citation">(<a href="#ref-nigrini2012">Nigrini 2012</a>)</span>.</p>
+lei de Benford <span class="citation">(<a href="#ref-benford1938">BENFORD, 1938</a>)</span>, ferramenta corrente em auditoria para detectar
+dados que não se formaram por processo natural de medida <span class="citation">(<a href="#ref-nigrini2012">NIGRINI, 2012</a>)</span>.</p>
 <p>A aplicação do terceiro procedimento exige cautela que a literatura aplicada
 nem sempre observa, e que aqui é explicitada: a lei de Benford pressupõe
 dados que percorrem várias ordens de magnitude sem corte, e a base está
@@ -715,8 +717,8 @@ ao menos duas causas distintas, e a análise só pode ser lida como descritiva.<
 <h3><span class="header-section-number">2.5.6</span> Comportamento da cauda</h3>
 <p>A cauda superior é examinada por meio do gráfico da função de sobrevivência
 empírica em escala duplamente logarítmica, no qual uma lei de potência
-aparece como reta <span class="citation">(<a href="#ref-newman2005">Newman 2005</a>)</span>. O expoente é estimado pelo estimador de Hill
-<span class="citation">(<a href="#ref-hill1975">Hill 1975</a>)</span>,</p>
+aparece como reta <span class="citation">(<a href="#ref-newman2005">NEWMAN, 2005</a>)</span>. O expoente é estimado pelo estimador de Hill
+<span class="citation">(<a href="#ref-hill1975">HILL, 1975</a>)</span>,</p>
 <p><span class="math display">\[\hat{\alpha} = \left[\frac{1}{n_u}\sum_{x_i &gt; u} \ln\frac{x_i}{u}\right]^{-1},\]</span></p>
 <p>calculado para dois limiares <span class="math inline">\(u\)</span>, a fim de verificar a estabilidade da
 estimativa. O interesse do procedimento é direto: um expoente estimado abaixo
@@ -1174,7 +1176,7 @@ verificar se a classificação declarada guarda relação com o valor declarado.
 <p>A Tabela <a href="#tab:porte">3.4</a> traz um resultado que contraria a expectativa
 razoável. Microempresa e pequena empresa, que são categorias legalmente
 definidas por faixas distintas de receita bruta anual
-<span class="citation">(<a href="#ref-brasil2006">Brasil 2006</a>; <a href="#ref-sebrae2024">SEBRAE 2024</a>)</span>, apresentam medianas de capital
+<span class="citation">(<a href="#ref-brasil2006">BRASIL, 2006</a>; <a href="#ref-sebrae2024">SEBRAE, 2024</a>)</span>, apresentam medianas de capital
 R$ 300.000 e
 R$ 350.000, praticamente
 indistinguíveis. A categoria residual, que reúne as empresas não enquadradas
@@ -1188,7 +1190,7 @@ era esperada antes de qualquer cálculo, e tratá-la como achado seria confundir
 detectabilidade com relevância. O tamanho de efeito é
 <span class="math inline">\(\varepsilon^2 = 0,196\)</span>, valor que situa a diferença no
 patamar classificado como grande pelas referências convencionais
-<span class="citation">(<a href="#ref-cohen1988">Cohen 1988</a>)</span> e que, ao mesmo tempo, deixa
+<span class="citation">(<a href="#ref-cohen1988">COHEN, 1988</a>)</span> e que, ao mesmo tempo, deixa
 80,4 por cento da variabilidade dos postos sem
 explicação pelo porte.</p>
 <p>A Figura <a href="#fig:boxplot-porte">3.4</a> mostra as distribuições completas.</p>
@@ -1555,7 +1557,7 @@ Figura 3.7: Função de sobrevivência empírica do capital social em escala dup
 duplamente logarítmica. Acima de um milhão de reais o traçado se aproxima de
 uma reta, forma característica de uma lei de potência, em que a proporção de
 observações acima de um valor decresce como potência desse valor
-<span class="citation">(<a href="#ref-newman2005">Newman 2005</a>)</span>. O estimador de Hill fornece
+<span class="citation">(<a href="#ref-newman2005">NEWMAN, 2005</a>)</span>. O estimador de Hill fornece
 <span class="math inline">\(\hat{\alpha} = 0,642\)</span> para o limiar de um milhão de
 reais, com 32.870 observações acima do corte, e
 <span class="math inline">\(\hat{\alpha} = 0,617\)</span> para o limiar de dez milhões, com
@@ -1916,87 +1918,87 @@ arredondamento e forma jurídica declarada.</p>
 </div>
 <div id="referencias" class="section level1" number="5">
 <h1><span class="header-section-number">5</span> Referências</h1>
-<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="refs" class="references csl-bib-body" entry-spacing="1">
 <div id="ref-aitchison1957" class="csl-entry">
-Aitchison, John, e J. A. C. Brown. 1957. <span>“The Lognormal Distribution, with Special Reference to its Uses in Economics”</span>. <em>Cambridge University Press</em> (Cambridge).
+AITCHISON, John; BROWN, J. A. C. <strong>The Lognormal Distribution, with Special Reference to its Uses in Economics</strong>. Cambridge: Cambridge University Press, 1957
 </div>
 <div id="ref-benford1938" class="csl-entry">
-Benford, Frank. 1938. <span>“The Law of Anomalous Numbers”</span>. <em>Proceedings of the American Philosophical Society</em> 78 (4): 551–72.
+BENFORD, Frank. The Law of Anomalous Numbers. <strong>Proceedings of the American Philosophical Society</strong>. v. 78, n. 4, p. 551–572, 1938
 </div>
 <div id="ref-brasil2002" class="csl-entry">
-Brasil. 2002. <em>Lei nº 10.406, de 10 de janeiro de 2002: institui o Código Civil</em>. Diário Oficial da União. <a href="https://www.planalto.gov.br/ccivil_03/leis/2002/l10406compilada.htm">https://www.planalto.gov.br/ccivil_03/leis/2002/l10406compilada.htm</a>.
+BRASIL. <strong>Lei nº 10.406, de 10 de janeiro de 2002: institui o Código Civil</strong>. Diário Oficial da União, 2002. Disponível em: &lt;<a href="https://www.planalto.gov.br/ccivil_03/leis/2002/l10406compilada.htm">https://www.planalto.gov.br/ccivil_03/leis/2002/l10406compilada.htm</a>&gt;
 </div>
 <div id="ref-brasil2006" class="csl-entry">
-Brasil. 2006. <em>Lei Complementar nº 123, de 14 de dezembro de 2006</em>. Institui o Estatuto Nacional da Microempresa e da Empresa de Pequeno Porte. <a href="https://www.planalto.gov.br/ccivil_03/leis/lcp/lcp123.htm">https://www.planalto.gov.br/ccivil_03/leis/lcp/lcp123.htm</a>.
-</div>
-<div id="ref-receita2026" class="csl-entry">
-Brasil. Ministério da Fazenda. Secretaria Especial da Receita Federal. 2026. <em>Cadastro Nacional da Pessoa Jurídica — CNPJ: dados abertos</em>. Portal Brasileiro de Dados Abertos. <a href="https://dados.gov.br/dados/conjuntos-dados/cadastro-nacional-da-pessoa-juridica---cnpj">https://dados.gov.br/dados/conjuntos-dados/cadastro-nacional-da-pessoa-juridica---cnpj</a>.
+BRASIL. <strong>Lei Complementar nº 123, de 14 de dezembro de 2006</strong>. Institui o Estatuto Nacional da Microempresa e da Empresa de Pequeno Porte, 2006. Disponível em: &lt;<a href="https://www.planalto.gov.br/ccivil_03/leis/lcp/lcp123.htm">https://www.planalto.gov.br/ccivil_03/leis/lcp/lcp123.htm</a>&gt;
 </div>
 <div id="ref-chang2026" class="csl-entry">
-Chang, Winston, Joe Cheng, J. J. Allaire, et al. 2026. <em>shiny: Web Application Framework for R</em>. Posit Software. <a href="https://shiny.posit.co/">https://shiny.posit.co/</a>.
+CHANG, Winston <em>et al.</em> <strong><a href="https://shiny.posit.co/">shiny: Web Application Framework for R</a></strong>. [<em>s. l.</em>]: Posit Software, 2026
 </div>
 <div id="ref-cohen1988" class="csl-entry">
-Cohen, Jacob. 1988. <em>Statistical Power Analysis for the Behavioral Sciences</em>. 2º ed. Lawrence Erlbaum Associates.
+COHEN, Jacob. <strong>Statistical Power Analysis for the Behavioral Sciences</strong>. 2. ed. Hillsdale: Lawrence Erlbaum Associates, 1988
 </div>
 <div id="ref-tomkins1984" class="csl-entry">
-Conover, W. J., e Ronald L. Iman. 1981. <span>“Rank Transformations as a Bridge between Parametric and Nonparametric Statistics”</span>. <em>The American Statistician</em> 35 (3): 124–29. <a href="https://doi.org/10.1080/00031305.1981.10479327">https://doi.org/10.1080/00031305.1981.10479327</a>.
+CONOVER, W. J.; IMAN, Ronald L. <a href="https://doi.org/10.1080/00031305.1981.10479327">Rank Transformations as a Bridge between Parametric and Nonparametric Statistics</a>. <strong>The American Statistician</strong>. v. 35, n. 3, p. 124–129, 1981
 </div>
 <div id="ref-cowell2011" class="csl-entry">
-Cowell, Frank A. 2011. <em>Measuring Inequality</em>. 3º ed. Oxford University Press.
+COWELL, Frank A. <strong>Measuring Inequality</strong>. 3. ed. Oxford: Oxford University Press, 2011
 </div>
 <div id="ref-cramer1946" class="csl-entry">
-Cramér, Harald. 1946. <span>“Mathematical Methods of Statistics”</span>. <em>Princeton University Press</em> (Princeton).
+CRAMÉR, Harald. <strong>Mathematical Methods of Statistics</strong>. Princeton: Princeton University Press, 1946
 </div>
 <div id="ref-efron1979" class="csl-entry">
-Efron, Bradley. 1979. <span>“Bootstrap Methods: Another Look at the Jackknife”</span>. <em>The Annals of Statistics</em> 7 (1): 1–26. <a href="https://doi.org/10.1214/aos/1176344552">https://doi.org/10.1214/aos/1176344552</a>.
+EFRON, Bradley. <a href="https://doi.org/10.1214/aos/1176344552">Bootstrap Methods: Another Look at the Jackknife</a>. <strong>The Annals of Statistics</strong>. v. 7, n. 1, p. 1–26, 1979
 </div>
 <div id="ref-gini1921" class="csl-entry">
-Gini, Corrado. 1921. <span>“Measurement of Inequality of Incomes”</span>. <em>The Economic Journal</em> 31 (121): 124–26. <a href="https://doi.org/10.2307/2223319">https://doi.org/10.2307/2223319</a>.
+GINI, Corrado. <a href="https://doi.org/10.2307/2223319">Measurement of Inequality of Incomes</a>. <strong>The Economic Journal</strong>. v. 31, n. 121, p. 124–126, 1921
 </div>
 <div id="ref-hill1975" class="csl-entry">
-Hill, Bruce M. 1975. <span>“A Simple General Approach to Inference about the Tail of a Distribution”</span>. <em>The Annals of Statistics</em> 3 (5): 1163–74. <a href="https://doi.org/10.1214/aos/1176343247">https://doi.org/10.1214/aos/1176343247</a>.
+HILL, Bruce M. <a href="https://doi.org/10.1214/aos/1176343247">A Simple General Approach to Inference about the Tail of a Distribution</a>. <strong>The Annals of Statistics</strong>. v. 3, n. 5, p. 1163–1174, 1975
 </div>
 <div id="ref-huntington2017" class="csl-entry">
-Huntington-Klein, Nick. 2017. <span>“Effect Sizes and Statistical Significance in Large Samples”</span>. <em>Journal of Econometric Methods</em> 6 (1): 1–10.
+HUNTINGTON-KLEIN, Nick. Effect Sizes and Statistical Significance in Large Samples. <strong>Journal of Econometric Methods</strong>. v. 6, n. 1, p. 1–10, 2017
 </div>
 <div id="ref-kruskal1952" class="csl-entry">
-Kruskal, William H., e W. Allen Wallis. 1952. <span>“Use of Ranks in One-Criterion Variance Analysis”</span>. <em>Journal of the American Statistical Association</em> 47 (260): 583–621. <a href="https://doi.org/10.1080/01621459.1952.10483441">https://doi.org/10.1080/01621459.1952.10483441</a>.
+KRUSKAL, William H.; WALLIS, W. Allen. <a href="https://doi.org/10.1080/01621459.1952.10483441">Use of Ranks in One-Criterion Variance Analysis</a>. <strong>Journal of the American Statistical Association</strong>. v. 47, n. 260, p. 583–621, 1952
 </div>
 <div id="ref-limpert2001" class="csl-entry">
-Limpert, Eckhard, Werner A. Stahel, e Markus Abbt. 2001. <span>“Log-normal Distributions across the Sciences: Keys and Clues”</span>. <em>BioScience</em> 51 (5): 341–52. <a href="https://doi.org/10.1641/0006-3568(2001)051%5B0341:LNDATS%5D2.0.CO;2">https://doi.org/10.1641/0006-3568(2001)051[0341:LNDATS]2.0.CO;2</a>.
+LIMPERT, Eckhard; STAHEL, Werner A.; ABBT, Markus. <a href="https://doi.org/10.1641/0006-3568(2001)051%5B0341:LNDATS%5D2.0.CO;2">Log-normal Distributions across the Sciences: Keys and Clues</a>. <strong>BioScience</strong>. v. 51, n. 5, p. 341–352, 2001
 </div>
 <div id="ref-lorenz1905" class="csl-entry">
-Lorenz, M. O. 1905. <span>“Methods of Measuring the Concentration of Wealth”</span>. <em>Publications of the American Statistical Association</em> 9 (70): 209–19. <a href="https://doi.org/10.2307/2276207">https://doi.org/10.2307/2276207</a>.
+LORENZ, M. O. <a href="https://doi.org/10.2307/2276207">Methods of Measuring the Concentration of Wealth</a>. <strong>Publications of the American Statistical Association</strong>. v. 9, n. 70, p. 209–219, 1905
 </div>
 <div id="ref-newman2005" class="csl-entry">
-Newman, M. E. J. 2005. <span>“Power Laws, Pareto Distributions and Zipf’s Law”</span>. <em>Contemporary Physics</em> 46 (5): 323–51. <a href="https://doi.org/10.1080/00107510500052444">https://doi.org/10.1080/00107510500052444</a>.
+NEWMAN, M. E. J. <a href="https://doi.org/10.1080/00107510500052444">Power Laws, Pareto Distributions and Zipf’s Law</a>. <strong>Contemporary Physics</strong>. v. 46, n. 5, p. 323–351, 2005
 </div>
 <div id="ref-nigrini2012" class="csl-entry">
-Nigrini, Mark J. 2012. <em>Benford’s Law: Applications for Forensic Accounting, Auditing, and Fraud Detection</em>. John Wiley &amp; Sons.
+NIGRINI, Mark J. <strong>Benford’s Law: Applications for Forensic Accounting, Auditing, and Fraud Detection</strong>. Hoboken: John Wiley &amp; Sons, 2012
 </div>
 <div id="ref-pareto1896" class="csl-entry">
-Pareto, Vilfredo. 1896. <em>Cours d’Économie Politique</em>. V. 2. F. Rouge.
+PARETO, Vilfredo. <strong>Cours d’Économie Politique</strong>. Lausanne: F. Rouge, 1896. v. 2
 </div>
 <div id="ref-rcore2026" class="csl-entry">
-R Core Team. 2026. <em>R: A Language and Environment for Statistical Computing</em>. R Foundation for Statistical Computing. <a href="https://www.R-project.org/">https://www.R-project.org/</a>.
-</div>
-<div id="ref-sebrae2024" class="csl-entry">
-SEBRAE. 2024. <em>Critérios de classificação de empresas por porte</em>. Serviço Brasileiro de Apoio às Micro e Pequenas Empresas.
+R CORE TEAM. <strong><a href="https://www.R-project.org/">R: A Language and Environment for Statistical Computing</a></strong>. Vienna, Austria: R Foundation for Statistical Computing, 2026
 </div>
 <div id="ref-tidytuesday2026" class="csl-entry">
-Silva, Marcelo, e TidyTuesday. 2026. <em>Brazilian Companies: conjunto de dados da semana de 27 de janeiro de 2026</em>. Repositório rfordatascience/tidytuesday, GitHub. <a href="https://github.com/rfordatascience/tidytuesday/tree/main/data/2026/2026-01-27">https://github.com/rfordatascience/tidytuesday/tree/main/data/2026/2026-01-27</a>.
+R4DS ONLINE LEARNING COMMUNITY. <strong>Brazilian Companies: conjunto de dados da semana de 27 de janeiro de 2026</strong>. Repositório rfordatascience/tidytuesday, GitHub, 2026. Disponível em: &lt;<a href="https://github.com/rfordatascience/tidytuesday/tree/main/data/2026/2026-01-27">https://github.com/rfordatascience/tidytuesday/tree/main/data/2026/2026-01-27</a>&gt;
+</div>
+<div id="ref-receita2026" class="csl-entry">
+RECEITA FEDERAL DO BRASIL. <strong>Cadastro Nacional da Pessoa Jurídica — CNPJ: dados abertos</strong>. Portal Brasileiro de Dados Abertos, 2026. Disponível em: &lt;<a href="https://dados.gov.br/dados/conjuntos-dados/cadastro-nacional-da-pessoa-juridica---cnpj">https://dados.gov.br/dados/conjuntos-dados/cadastro-nacional-da-pessoa-juridica---cnpj</a>&gt;
+</div>
+<div id="ref-sebrae2024" class="csl-entry">
+SEBRAE. <strong>Critérios de classificação de empresas por porte</strong>. Serviço Brasileiro de Apoio às Micro e Pequenas Empresas, 2024
 </div>
 <div id="ref-tukey1977" class="csl-entry">
-Tukey, John W. 1977. <em>Exploratory Data Analysis</em>. Addison-Wesley.
+TUKEY, John W. <strong>Exploratory Data Analysis</strong>. Reading, MA: Addison-Wesley, 1977
 </div>
 <div id="ref-wickham2016" class="csl-entry">
-Wickham, Hadley. 2016. <em>ggplot2: Elegant Graphics for Data Analysis</em>. 2º ed. Springer-Verlag. <a href="https://ggplot2.tidyverse.org">https://ggplot2.tidyverse.org</a>.
+WICKHAM, Hadley. <strong><a href="https://ggplot2.tidyverse.org">ggplot2: Elegant Graphics for Data Analysis</a></strong>. 2. ed. New York: Springer-Verlag, 2016
 </div>
 <div id="ref-xie2016" class="csl-entry">
-Xie, Yihui. 2016. <em>bookdown: Authoring Books and Technical Documents with R Markdown</em>. Chapman; Hall/CRC. <a href="https://bookdown.org/yihui/bookdown/">https://bookdown.org/yihui/bookdown/</a>.
+XIE, Yihui. <strong><a href="https://bookdown.org/yihui/bookdown/">bookdown: Authoring Books and Technical Documents with R Markdown</a></strong>. Boca Raton: CRC Press, 2016
 </div>
 <div id="ref-xie2018" class="csl-entry">
-Xie, Yihui, J. J. Allaire, e Garrett Grolemund. 2018. <em>R Markdown: The Definitive Guide</em>. Chapman; Hall/CRC. <a href="https://bookdown.org/yihui/rmarkdown/">https://bookdown.org/yihui/rmarkdown/</a>.
+XIE, Yihui; ALLAIRE, J. J.; GROLEMUND, Garrett. <strong><a href="https://bookdown.org/yihui/rmarkdown/">R Markdown: The Definitive Guide</a></strong>. Boca Raton: CRC Press, 2018
 </div>
 </div>
 </div>
@@ -2058,7 +2060,7 @@ repositório.</p>
 <div id="apendice-app" class="section level1 unnumbered">
 <h1>Apêndice B — O aplicativo interativo</h1>
 <p>A segunda parte do trabalho consiste em um aplicativo construído com shiny
-<span class="citation">(<a href="#ref-chang2026">Chang et al. 2026</a>)</span>, organizado em dez abas, cada uma com um aspecto distinto da
+<span class="citation">(<a href="#ref-chang2026">CHANG et al., 2026</a>)</span>, organizado em dez abas, cada uma com um aspecto distinto da
 mesma base, seus próprios seletores, ao menos um gráfico e ao menos uma
 tabela. As abas tratam, na ordem: panorama geral, distribuição do capital,
 porte, forma jurídica, qualificação do responsável, cruzamento de duas

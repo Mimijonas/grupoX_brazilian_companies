@@ -23,6 +23,7 @@ output:
     highlight: tango
     self_contained: true
 bibliography: referencias.bib
+csl: abnt.csl
 link-citations: true
 ---
 
@@ -315,7 +316,7 @@ resistentes a valores extremos. Relatam-se a mediana, os quartis e os
 percentis de 1, 10, 90 e 99, acompanhados da amplitude interquartílica. A
 média e o desvio padrão são informados, porém com a finalidade explícita de
 exibir a sua inadequação neste caso, exercício na linha da análise
-exploratória proposta por @tukey1977.
+exploratória proposta por Tukey [-@tukey1977].
 
 O coeficiente de assimetria é calculado como o terceiro momento padronizado,
 $g_1 = m_3 / m_2^{3/2}$, com os momentos centrais estimados pela divisão por
