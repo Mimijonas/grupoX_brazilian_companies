@@ -19,7 +19,7 @@ a partir do Cadastro Nacional da Pessoa Jurídica (Receita Federal).
 |---|---|
 | Aplicativo Shiny | _a publicar (shinyapps.io)_ |
 | Vídeo de apresentação | _a gravar (YouTube)_ |
-| Relatório | [`relatorio/relatorio.Rmd`](relatorio/relatorio.Rmd) — **pronto**, renderizado em `relatorio.html` |
+| Relatório | [`relatorio/relatorio.Rmd`](relatorio/relatorio.Rmd) — **pronto**: 30 páginas A4 em [`relatorio.pdf`](relatorio/relatorio.pdf) |
 
 ## Como rodar
 
@@ -54,8 +54,27 @@ R/abaNN_assunto.R          uma aba por arquivo
 scripts/                   baixar, tratar e perfilar os dados
 dados/tratados/            companies.rds (versionado: o app precisa dele)
 dados/brutos/              CSV originais (fora do repositório)
-relatorio/                 o .Rmd do relatório
+relatorio/relatorio.Rmd    o relatório
+relatorio/impressao.css    folha de estilo A4 (corpo 12pt, entrelinha 1,5)
+relatorio/render.R         renderiza o .Rmd e imprime o PDF
 ```
+
+## Relatório
+
+```bash
+cd relatorio && Rscript render.R
+```
+
+O `render.R` compila o `.Rmd` e, em seguida, imprime o HTML em PDF A4 usando o
+Chrome em modo headless. O caminho usual seria `bookdown::pdf_document2`, que
+exige uma distribuição LaTeX instalada; o Chrome já está na máquina e respeita
+a folha de estilo `impressao.css`, onde ficam as margens, o corpo de 12pt e a
+entrelinha de 1,5. O número de páginas do PDF é, portanto, o número de páginas
+que se vê no papel: **30**.
+
+Nenhum valor numérico do texto foi digitado. Todos saem de código embutido
+(`` `r ...` ``) sobre `dados/tratados/companies.rds`, de modo que mudar o
+pré-processamento muda o texto na próxima renderização.
 
 **Cada aba vive em seu próprio arquivo.** É o que permite cinco pessoas
 trabalharem ao mesmo tempo: dois PRs que mexem no mesmo `app.R` brigam linha a
@@ -92,7 +111,10 @@ Conforme exigido no enunciado: o uso de inteligência artificial deve ser
 declarado em todas as partes do projeto. Cada integrante registra aqui o que
 usou e em quê.
 
-- **Breno** — Claude (Anthropic) no preparo dos dados (`scripts/`) e na aba 2:
-  estruturação do código, geração dos gráficos e revisão. Os achados
-  estatísticos foram verificados contra `saidas/tabelas/perfil.txt`, gerado
-  pelos próprios scripts.
+- **Breno** — Claude (Anthropic) no apoio à estruturação do código de
+  importação e tratamento (`scripts/`), na construção dos módulos do
+  aplicativo (`R/aba*.R`) e na revisão da redação do relatório. As decisões
+  analíticas, a escolha das técnicas estatísticas e a interpretação dos
+  resultados são de responsabilidade dos autores. Todos os valores numéricos
+  foram conferidos contra `saidas/tabelas/perfil.txt`, gerado pelos próprios
+  scripts, de forma independente do texto.

@@ -1,0 +1,8 @@
+# O bookdown rotula as legendas em ingles por padrao ("Table 3.1"), enquanto
+# o texto do relatorio as chama pela referencia cruzada em portugues
+# ("Tabela 3.1"). Estes dois rotulos alinham as duas pontas. O arquivo vive
+# ao lado do .Rmd porque e dali que o render e chamado.
+language:
+  label:
+    fig: "Figura "
+    tab: "Tabela "
